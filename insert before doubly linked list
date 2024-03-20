@@ -1,0 +1,138 @@
+#include<stdio.h>
+#include<stdlib.h>
+
+typedef struct DLLnode{
+	int data;
+	struct DLLnode * next,*back;
+}DLLnode;
+
+DLLnode * create(){
+	DLLnode * start =(DLLnode * )malloc(sizeof(DLLnode));
+	start->back=NULL;
+	DLLnode * curr =start;
+	printf("enter the first element of list: ");
+	scanf("%d",&(start->data));
+	while(1){
+		int val;
+		printf("enter the value of next element or enter -1 to stop: ");
+		scanf("%d",&val);
+		if(val==-1){
+			break;
+		}
+		else{
+			DLLnode * temp =(DLLnode *)malloc(sizeof(DLLnode));
+			temp->data = val;
+			temp->back =curr;
+			curr->next = temp;
+			curr = temp;
+		}
+	}
+	curr->next =NULL;
+	return start;
+}
+
+void display_forward(DLLnode * start){
+	DLLnode * temp = start;
+	while (temp!=NULL){
+		printf("%d ",(temp->data));
+		temp=temp->next;
+	}
+	printf("\n");
+}
+
+void display_backward(DLLnode * start){
+	DLLnode * temp =start;
+	while(temp->next!=NULL){
+		temp=temp->next;
+	}
+	while(temp!=NULL){
+		printf("%d ",(temp->data));
+		temp=temp->back;
+	}
+}
+
+DLLnode * insert_before(DLLnode * start, int val){
+	DLLnode * ptr;
+	ptr =start;
+	while(ptr!=NULL){
+		if(ptr->data!=val){
+			ptr = ptr->next;
+		}
+		else{
+		   break;	
+		}
+	}
+	if(ptr==NULL){
+		printf("invalid number.\n");
+		return start;
+	}
+	if(ptr == start){
+	    DLLnode * temp = (DLLnode *)malloc(sizeof(DLLnode));
+		printf("enter the value to be inserted: ");
+		scanf("%d",&(temp->data));
+		ptr->back=temp;
+		temp->back=NULL;
+		temp->next=ptr;
+		start = temp;
+		return start;	
+	}
+	DLLnode * temp = (DLLnode *)malloc(sizeof(DLLnode));
+	printf("enter the value to be inserted: ");
+	scanf("%d",&(temp->data));
+	temp->back = ptr->back;
+	temp->next = ptr;
+	(ptr->back)->next=temp;
+	ptr->back = temp;
+	return start;
+}
+
+
+DLLnode * delete_before(DLLnode * start, int val){
+	DLLnode * ptr;
+	ptr =start;
+	while(ptr!=NULL){
+		if(ptr->data!=val){
+			ptr = ptr->next;
+		}
+		else{
+		   break;	
+		}
+	}
+	if(ptr==NULL){
+		printf("invalid number.\n");
+		return start;
+	}
+	if(ptr == start ){
+		printf("there exist no value before the given number.\n");
+		return -1;
+	}
+	if(ptr == start->next){
+		DLLnode * ptr = start;
+		start = start ->next;
+		start->back =NULL;
+		free(ptr);
+		return start;
+	}
+	DLLnode * temp = ptr ->back;
+	ptr->back=temp->back;
+	(temp->back)->next=ptr;
+	int del =temp->data;
+	free(temp);
+	return start;
+}
+int main(){
+	DLLnode * start ;
+	start =create();
+	display_forward(start);
+	printf("enter the value before which you want to insert: ");
+	int val;
+	scanf("%d",&val);
+	start = insert_before(start, val);
+	display_forward(start);
+	printf("enter the value before which you want to delete: ");
+	scanf("%d",&val);
+	start=delete_before(start,val);
+	display_forward(start);
+//	display_backward(start);
+	return 0;
+}
