@@ -1,0 +1,105 @@
+#include<stdio.h>
+#include<stdlib.h>
+
+typedef struct node{
+	int data;
+	struct node *next;
+}node;
+
+node * create(){
+	node * start,*temp, *curr;
+	int val;
+	start=(node *)malloc(sizeof(node));
+	printf("enter data for first node: ");
+	scanf("%d",&val);
+	if(val==-1){
+		start=NULL;
+	}
+	else{
+		start->data=val;
+		curr=start;
+		while(1){
+			int val1;
+			printf("insert value and -1 for for exit: ");
+			scanf("%d",&val1);
+			if(val1==-1){
+				curr->next='\0';
+				break;
+			}
+			temp=(node *)malloc(sizeof(node));
+			temp->data = val1;
+			curr->next = temp;
+			curr = curr->next;
+		}
+		curr->next='\0';
+		return start;
+	}
+}
+
+int delete_after_val(node *start,int val1){
+	node *ptr;
+	ptr=start;
+	while (ptr!=NULL && ptr->data!=val1){
+		ptr=ptr->next;
+	}
+	node *temp =ptr->next;
+	val1 = temp->data;
+	ptr->next=temp->next;
+	free(temp);
+	return val1;
+}
+
+void insert_after_val(node *start, int val){
+	node *ptr;
+	int new_val;
+	ptr=start;
+	while (ptr!=NULL && ptr->data!=val){
+		ptr=ptr->next;
+	}
+
+	node *temp1 =(node *)malloc(sizeof(node));
+	printf("enter the value to be inserted: ");
+	scanf("%d",&new_val);
+	temp1->data=new_val;
+	temp1->next=ptr->next;
+	ptr->next=temp1;
+}
+void display(node * start){
+	node * temp;
+	temp=start;
+	while(temp!=NULL){
+		printf("%d",temp->data);
+		temp=temp->next;
+	}
+	return;
+}
+int main(){
+	int n;
+	node * start = create();
+    while(1){
+	printf("enter 1 to insert and 2 to delete 3 for display: ");
+	scanf("%d",&n);
+	node * ptr;
+	if (n==1){
+		int val;
+		printf("enter the val of the element after which you want to insert: ");
+		scanf("%d",&val);
+		insert_after_val(start,val);
+		// display(start);
+	}
+	else if(n==2){
+		int val1;
+		printf("enter the val of the element after which you want to delete: ");
+		scanf("%d",&val1);
+		delete_after_val(start,val1);
+		// display(start);
+	}
+    else if(n==3)
+    {
+        display(start);
+    }
+    else{
+        exit(0);
+    }
+    }
+}
