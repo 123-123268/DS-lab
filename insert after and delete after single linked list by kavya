@@ -1,0 +1,116 @@
+#include<stdio.h>
+#include<stdlib.h>
+
+typedef struct node{
+	int data;
+	struct node *next;
+}node;
+
+node * create(){
+	node * start,*temp, *curr;
+	int val;
+	start=(node *)malloc(sizeof(node));
+	printf("enter data for first node: ");
+	scanf("%d",&val);
+	if(val==-1){
+		start=NULL;
+	}
+	else{
+		start->data=val;
+		curr=start;
+		while(1){
+			int val1;
+			printf("insert value and -1 for for exit: ");
+			scanf("%d",&val1);
+			if(val1==-1){
+				curr->next='\0';
+				break;
+			}
+			temp=(node *)malloc(sizeof(node));
+			temp->data = val1;
+			curr->next = temp;
+			curr = curr->next;
+		}
+		curr->next='\0';
+		return start;
+	}
+}
+
+int deleteAfter(node * start,int val,node *ptr){
+	node *temp;
+	temp = start;
+	ptr=NULL;
+	while (temp != NULL){
+		if(temp->data== val){
+			ptr=temp;
+            break;
+		}
+		else{
+			temp=temp->next;
+		}
+	}
+	if(temp==NULL){
+		printf("the given value is not present");
+		return;
+	}
+	node *t =ptr->next;
+	int v = t->data;
+	ptr->next=t->next;
+	free(t);
+	return v;
+}
+
+void insert_after_val(node *start, int val, node *ptr){
+	node *temp;
+	temp = start;
+	ptr=NULL;
+	while (temp != NULL){
+		if(temp->data== val){
+			ptr=temp;
+            break;
+		}
+		else{
+			temp=temp->next;
+		}
+	}
+	if(temp==NULL){
+		printf("the given value is not present");
+		return;
+	}
+	
+	temp =(node *)malloc(sizeof(node));
+	printf("enter the value to be inserted: ");
+	scanf("%d",&(temp->data));
+	temp->next=ptr->next;
+	ptr->next=temp;
+}
+void display(node* head)
+{
+    node* temp1;
+    temp1=head;
+     while(temp1!=NULL)
+     {
+        printf("%d ",temp1->data);
+        temp1=temp1->next;
+     }
+}
+int main(){
+	int n;
+	node * start = create();
+	printf("enter 1 to insert and 2 to delete: ");
+	scanf("%d",&n);
+	node * ptr;
+	if (n==1){
+		int val;
+		printf("enter the val of the element after which you want to insert: ");
+		scanf("%d",&val);
+		insert_after_val(start,val,ptr);
+	}
+	else if(n==2){
+		int val;
+		printf("enter the val of the element after which you want to delete: ");
+		scanf("%d",&val);
+		deleteAfter(start,val,ptr);
+	}
+	display(start);
+}
