@@ -1,0 +1,145 @@
+#include<stdio.h>
+typedef struct node{
+	int data;
+	struct node *next;
+}node;
+node * create(){
+	node * start,*temp, *curr;
+	int val;
+	start=(node *)malloc(sizeof(node));
+	printf("enter data for first node: ");
+	scanf("%d",&val);
+	if(val==-1){
+		start=NULL;
+	}
+	else{
+		start->data=val;
+		curr=start;
+		while(1){
+			int val1;
+			printf("insert value and -1 for exit: ");
+			scanf("%d",&val1);
+			if(val1==-1){
+				curr->next='\0';
+				break;
+			}
+			temp=(node *)malloc(sizeof(node));
+			temp->data = val1;
+			curr->next = temp;
+			curr = curr->next;
+		}
+		curr->next='\0';
+		return start;
+	}
+}
+
+node * insert_at_start(node * start,int newval){
+	node*temp;
+	temp=(node *)malloc(sizeof(node));
+	temp->data=newval;
+	temp->next=start;
+	start=temp;
+	return start;
+}
+
+node * delete_at_start(node * start, int * val){
+	*val=start->data;
+	node *temp=start;
+	start=start->next;
+	free(temp);
+	return start;
+}
+
+node * insert_at_pos(node * start,int pos){
+	if(pos==1){
+		int val;
+		printf("enter the value to be inserted: ");
+		scanf("%d",&val);
+		start=insert_at_start(start,val);
+		return start;
+	}
+	else{
+		int count =1;
+		node * p1 =start;
+		while(count<pos-1){
+		    if(p1==NULL){
+				printf("the given position is invalid\n");
+				return start;
+			}
+			else{
+				p1=p1->next;
+				count++;
+			}	
+		}
+		node * temp = (node *)malloc(sizeof(node));
+		printf("enter the value to be inserted: ");
+		scanf("%d",&(temp->data));
+		temp->next = p1->next;
+		p1->next = temp;
+	}
+	return start ;
+}
+
+node * delete_at_pos(node *start,int * val,int pos){
+	if(pos==1){
+		start=delete_at_start(start,val);
+		return start;
+	}
+	else{
+		int count =1;
+		node * p1 =start;
+		while(count<pos-1){
+			if(p1==NULL){
+				printf("the given position is invalid\n");
+				return start;
+			}
+			else{
+				p1=p1->next;
+				count++;
+			}
+		}
+		node *temp;
+		temp = p1->next;
+		*val = temp->data;
+		p1->next=temp->next;
+		free(temp);
+		return start;
+	}
+}
+void display(node* head)
+{
+    node* temp1;
+    temp1=head;
+     while(temp1!=NULL)
+     {
+        printf("%d ",temp1->data);
+        temp1=temp1->next;
+     }
+     printf("\n");
+}
+int main(){
+	node * start = create();
+	int delval,pos;
+	while(1){
+		int choice;
+		printf("enter the 1 to insert, 2 to delete, 3 to exit ,4 to display: ");
+		scanf("%d",&choice);
+		if(choice == 1){
+			printf("enter the position: ");
+			scanf("%d",&pos);
+			start=insert_at_pos(start,pos);
+		}
+		else if(choice == 2){			
+			printf("enter the position: ");
+			scanf("%d",&pos);
+			start=delete_at_pos(start,&delval,pos);
+		}
+		else if(choice == 3){
+			break;
+		}
+		else if(choice == 4){
+			display(start);
+		}
+	}
+	return 0;
+}
