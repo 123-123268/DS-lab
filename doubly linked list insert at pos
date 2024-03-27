@@ -1,0 +1,141 @@
+#include<stdio.h>
+#include<stdlib.h>
+
+typedef struct DLLnode{
+	int data;
+	struct DLLnode * next,*back;
+}DLLnode;
+
+DLLnode * create(){
+	DLLnode * start =(DLLnode * )malloc(sizeof(DLLnode));
+	start->back=NULL;
+	DLLnode * curr =start;
+	printf("enter the first element of list: ");
+	scanf("%d",&(start->data));
+	while(1){
+		int val;
+		printf("enter the value of next element or enter -1 to stop: ");
+		scanf("%d",&val);
+		if(val==-1){
+			break;
+		}
+		else{
+			DLLnode * temp =(DLLnode *)malloc(sizeof(DLLnode));
+			temp->data = val;
+			temp->back =curr;
+			curr->next = temp;
+			curr = temp;
+		}
+	}
+	curr->next =NULL;
+	return start;
+}
+
+void display_forward(DLLnode * start){
+	DLLnode * temp = start;
+	while (temp!=NULL){
+		printf("%d ",(temp->data));
+		temp=temp->next;
+	}
+	printf("\n");
+}
+
+void display_backward(DLLnode * start){
+	DLLnode * temp =start;
+	while(temp->next!=NULL){
+		temp=temp->next;
+	}
+	while(temp!=NULL){
+		printf("%d ",(temp->data));
+		temp=temp->back;
+	}
+}
+
+DLLnode *insert_pos(DLLnode * start,int pos){
+	DLLnode * temp=start;
+	for(int i=1;i<pos;i++){
+		temp=temp->next;
+		if(temp==NULL){
+			printf("the given position doesnt exist.");
+			return start;
+		}
+	}
+	if(temp->back==NULL && temp->next!=NULL){
+		DLLnode * t = (DLLnode *)malloc(sizeof(DLLnode));
+		printf("enter the value to be insertd: ");
+		scanf("%d",&t->data);
+		t->back=NULL;
+		t->next=temp;
+		temp->back=t;
+		start = t;
+		return start;
+	}
+	else if(temp->back!=NULL && temp->next == NULL){
+		DLLnode * t =(DLLnode *)malloc(sizeof(DLLnode));
+		printf("enter the value to be insertd: ");
+		scanf("%d",&t->data);
+		t->next=temp;
+		t->back=temp->back;
+		(temp->back)->next=t;
+		temp->back=t;
+		return start;
+	}
+	else if(temp->back!=NULL && temp->next!=NULL){
+		DLLnode * t =(DLLnode *)malloc(sizeof(DLLnode));
+		printf("enter the value to be insertd: ");
+		scanf("%d",&(t->data));
+		t->next=temp;
+		t->back=temp->back;
+		(temp->back)->next=t;
+		temp->back=t;
+		return start;
+	}
+}
+
+DLLnode * delete_pos(DLLnode * start,int pos){
+	DLLnode * temp=start;
+	for(int i=1;i<pos;i++){
+		temp=temp->next;
+		if(temp==NULL){
+			printf("the given position doesnt exist.");
+			return start;
+		}
+	}
+	if(temp->next!=NULL && temp->back==NULL){
+		(temp->next)->back=NULL;
+		start=temp->next;
+		free(temp);
+		return start;
+	}
+	else if(temp->next == NULL && temp->back !=NULL){
+		(temp->back)->next=NULL;
+		free(temp);
+		return start;
+	} 
+	else if(temp->next==NULL && temp->back==NULL){
+		start=NULL;
+		free(temp);
+	}
+	else{
+		(temp->back)->next=temp->next;
+		(temp->next)->back=temp->back;
+		free(temp);
+		return start;
+	}
+}
+int main(){
+	DLLnode * start ;
+	start =create();
+	display_forward(start);
+	printf("enter the pos at which you want to insert: ");
+	int pos;
+	scanf("%d",&pos);
+	start = insert_pos(start, pos);
+	display_forward(start);
+	printf("enter the pos at which you want to delete: ");
+	scanf("%d",&pos);
+	start=delete_pos(start,pos);
+	display_forward(start);
+	display_backward(start);
+	return 0;
+}
